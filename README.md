@@ -96,19 +96,3 @@ git submodule init --recursive
 
 ### Misc image operations
 
-
-## Currently implemented DirectXTex classes:
-### structs
-- [x] TexMetadata
-- [x] Image
-- [ ] Rect
-
-
-### classes
-- [x] ScratchImage
-- [ ] Blob
-
-### enums
-- [x] DDS_FLAGS
-- [x] TEX_DIMENSION
-- [x] TEX_FILTER_FLAGS
