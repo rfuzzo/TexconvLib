@@ -1,44 +1,21 @@
-# DirectXTexSharp
- A c++/CLI wrapper around DirectXTex and Texconv. Available as managed nuget for x64 and x86 platforms.
+# Texconv
+A c++ wrapper library around [DirectXTex and Texconv](https://github.com/microsoft/DirectXTex).
 
-## Installation
+## Build instructions
 
-All stable and some pre-release packages are available on NuGet.
+1. Clone the repository into an empty folder
 
-You can use the following command in the Package Manager Console:
-```ps
-Install-Package DirectXTexSharp
+```cmd
+git clone https://github.com/dotnet/clangsharp
 ```
 
-| Package | NuGet Stable | NuGet Pre-release | Downloads |
-| ------- | ------------ | ----------------- | --------- |
-| [DirectXTexSharp](https://www.nuget.org/packages/DirectXTexSharp/) | [![DirectXTexSharp](https://img.shields.io/nuget/v/DirectXTexSharp.svg)](https://www.nuget.org/packages/DirectXTexSharp/) | [![DirectXTexSharp](https://img.shields.io/nuget/vpre/DirectXTexSharp.svg)](https://www.nuget.org/packages/DirectXTexSharp/) | [![DirectXTexSharp](https://img.shields.io/nuget/dt/DirectXTexSharp)](https://www.nuget.org/packages/DirectXTexSharp/) |
-
-## Usage
+2. Update the submodules
+```cmd
+git submodule init --recursive
 ```
-using DirectXTexSharp;
 
+3. Build the repository with cmake
 
-fixed (byte* ptr = span)
-{
-    var outDir = Path.Combine( new FileInfo(ddsPath).Directory.FullName, "out");
-    Directory.CreateDirectory(outDir);
-    var fileName = Path.GetFileNameWithoutExtension(ddsPath);
-    var extension = filetype.ToString().ToLower();
-    var newpath = Path.Combine(outDir, $"{fileName}.{extension}");
-
-    var len = span.Length;
-
-    // test direct saving
-    DirectXTexSharp.Texconv.ConvertAndSaveDdsImage(ptr, len, newpath, filetype, false, false);
-
-    // test buffer saving
-    var buffer = DirectXTexSharp.Texconv.ConvertFromDdsArray(ptr, len, filetype, false, false);
-    var newpath2 = Path.Combine(outDir, $"{fileName}.2.{extension}");
-    File.WriteAllBytes(newpath2, buffer);
-
-}
-```
 ## Currently implemented Texconv functions:
 - [ ] ConvertAndSaveDdsImage
 - [ ] ConvertDdsImageToArray
