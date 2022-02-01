@@ -69,8 +69,7 @@ endif()
 
 add_library(texconv SHARED
         DirectXTexEnums.h
-        texconv.h
-        # texconv_lib.cpp
+        Texconv.h
         Texconv.cpp
         Format.cpp
         Metadata.cpp
@@ -79,8 +78,7 @@ add_library(texconv SHARED
 # add_library(texconv_static STATIC ${SOURCE})
 add_executable(main
         DirectXTexEnums.h
-        texconv.h
-        # texconv_lib.cpp
+        Texconv.h
         Texconv.cpp
         Format.cpp
         Metadata.cpp

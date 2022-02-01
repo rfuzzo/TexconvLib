@@ -20,6 +20,8 @@
 #include <Windows.h>
 #include <intrin.h>
 #include <dxgiformat.h>
+#include <system_error>
+#include <comdef.h>
 
 #undef max
 #undef min
@@ -76,6 +78,21 @@
 #endif
 
 #define IS_CLR (_MANAGED == 1) || (_M_CEE == 1)
+
+#if !defined(_WIN32)
+typedef long HRESULT;
+#define FAILED(hr) (((HRESULT)(hr)) < 0)
+#endif
+
+template< typename T >
+inline void ThrowIfFailed(HRESULT hr, T&& msg)
+{
+    if (FAILED(hr))
+    {
+        throw _com_error(hr);
+        //throw std::system_error{ hr, std::system_category(), std::forward<T>( msg ) };
+    }
+}
 
 typedef uint8_t byte;
 typedef uint8_t uint8;

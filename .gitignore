@@ -31,3 +31,5 @@ obj/
 DirectXTexSharp/cmake-build-debug/
 DirectXTexSharp/cmake-build-release/
 out/
+Source/cmake-build-debug/
+Source/cmake-build-release/

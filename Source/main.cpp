@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <fstream>
-#include "texconv.h"
+#include "Texconv.h"
 
 void error(const char *s, const char *curfile = NULL) {
     if (curfile)

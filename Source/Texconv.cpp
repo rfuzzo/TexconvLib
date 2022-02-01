@@ -1,18 +1,8 @@
-#if (_MANAGED == 1) || (_M_CEE == 1)
-#include "DirectXTexSharpLib.h"
-#include <msclr/marshal.h>
-#include <msclr/marshal_cppstd.h>
-#else
-#include <comdef.h>  // Declares _com_error
-
-#include "texconv.h"
+#include "Texconv.h"
 #include "../DirectXTex/DirectXTex/DirectXTex.h"
-#endif
-
-
 #include <wincodec.h>
 #include <memory>
-//#include <wrl/client.h> //not supported in /clr
+#include <wrl/client.h>
 
 using namespace DirectXTexSharp;
 
@@ -97,11 +87,7 @@ inline void throw_or_clr(HRESULT hr)
 {
     if (FAILED(hr))
     {
-#if (_MANAGED == 1) || (_M_CEE == 1)
-        System::Runtime::InteropServices::Marshal::ThrowExceptionForHR(hr);
-#else
         throw _com_error(hr);
-#endif
     }
 }
 
@@ -879,18 +865,10 @@ DirectX::Blob ConvertToDdsMemory(
 int ConvertAndSaveDdsImage(
     byte* bytePtr,
     int len,
-#if (_MANAGED == 1) || (_M_CEE == 1)
-    System::String^ szFile,
-#else
     const wchar_t* szFile,
-#endif
 	DirectXTexSharp::ESaveFileTypes filetype, 
     bool vflip, 
     bool hflip) {
-
-#if (_MANAGED == 1) || (_M_CEE == 1)
-    msclr::interop::marshal_context context;
-#endif
 
     HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
         
@@ -905,11 +883,7 @@ int ConvertAndSaveDdsImage(
         hr = DirectX::SaveToTGAFile(
             img[0], 
             DirectX::TGA_FLAGS_NONE,
-#if (_MANAGED == 1) || (_M_CEE == 1)
-            context.marshal_as<const wchar_t*>(szFile),
-#else
             szFile,
-#endif
             /*(dwOptions & (uint64_t(1) << OPT_TGA20)) ? &info :*/ nullptr);
         break;
     }
@@ -929,12 +903,8 @@ int ConvertAndSaveDdsImage(
             nimages, 
             DirectX::WIC_FLAGS_NONE, 
             DirectX::GetWICCodec(codec),
-#if (_MANAGED == 1) || (_M_CEE == 1)
-            context.marshal_as<const wchar_t*>(szFile),
-#else
             szFile,
-#endif
-            nullptr, 
+            nullptr,
             GetWicPropsJpg);
         break;
     }
@@ -948,11 +918,7 @@ int ConvertAndSaveDdsImage(
             nimages,
             DirectX::WIC_FLAGS_NONE,
             DirectX::GetWICCodec(codec),
-#if (_MANAGED == 1) || (_M_CEE == 1)
-            context.marshal_as<const wchar_t*>(szFile),
-#else
             szFile,
-#endif
             nullptr,
             GetWicPropsTiff);
         break;
@@ -967,11 +933,7 @@ int ConvertAndSaveDdsImage(
             nimages,
             DirectX::WIC_FLAGS_NONE,
             DirectX::GetWICCodec(codec),
-#if (_MANAGED == 1) || (_M_CEE == 1)
-            context.marshal_as<const wchar_t*>(szFile),
-#else
             szFile,
-#endif
             nullptr,
             nullptr);
         break;
@@ -986,11 +948,7 @@ int ConvertAndSaveDdsImage(
             nimages,
             DirectX::WIC_FLAGS_NONE,
             DirectX::GetWICCodec(codec),
-#if (_MANAGED == 1) || (_M_CEE == 1)
-            context.marshal_as<const wchar_t*>(szFile),
-#else
             szFile,
-#endif
             nullptr,
             nullptr);
         break;
