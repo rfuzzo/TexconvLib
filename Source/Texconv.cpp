@@ -968,7 +968,7 @@ int ConvertAndSaveDdsImage(
 EXPORT size_t ConvertFromDds(
         byte* bytePtr,
         int len,
-        Blob& blob,
+        DirectX::Blob& blob,
         DirectXTexSharp::ESaveFileTypes filetype,
         bool vflip,
         bool hflip)
@@ -979,8 +979,6 @@ EXPORT size_t ConvertFromDds(
     auto img = image->GetImage(0, 0, 0);
     assert(img);
 
-    DirectX::Blob dblob;
-
     switch (filetype)
     {
     case DirectXTexSharp::ESaveFileTypes::TGA:
@@ -989,7 +987,7 @@ EXPORT size_t ConvertFromDds(
         hr = DirectX::SaveToTGAMemory(
                 img[0],
                 DirectX::TGA_FLAGS_NONE,
-                dblob,
+                blob,
             /*(dwOptions & (uint64_t(1) << OPT_TGA20)) ? &info :*/ nullptr);
         break;
     }
@@ -1009,7 +1007,7 @@ EXPORT size_t ConvertFromDds(
                 nimages,
                 DirectX::WIC_FLAGS_NONE,
                 DirectX::GetWICCodec(codec),
-                dblob,
+                blob,
                 nullptr,
                 GetWicPropsJpg);
         break;
@@ -1024,7 +1022,7 @@ EXPORT size_t ConvertFromDds(
                 nimages,
                 DirectX::WIC_FLAGS_NONE,
                 DirectX::GetWICCodec(codec),
-                dblob,
+                blob,
                 nullptr,
                 GetWicPropsTiff);
         break;
@@ -1039,7 +1037,7 @@ EXPORT size_t ConvertFromDds(
                 nimages,
                 DirectX::WIC_FLAGS_NONE,
                 DirectX::GetWICCodec(codec),
-                dblob,
+                blob,
                 nullptr,
                 nullptr);
         break;
@@ -1054,7 +1052,7 @@ EXPORT size_t ConvertFromDds(
                 nimages,
                 DirectX::WIC_FLAGS_NONE,
                 DirectX::GetWICCodec(codec),
-                dblob,
+                blob,
                 nullptr,
                 nullptr);
         break;
@@ -1068,20 +1066,13 @@ EXPORT size_t ConvertFromDds(
         throw_or_clr(hr);
     }
 
-    auto len_buffer = dblob.GetBufferSize();
-
-    blob.m_buffer = new byte[len_buffer];
-    blob.m_size = len_buffer;
-    memcpy(blob.m_buffer, dblob.GetBufferPointer(), len_buffer);
-
-    dblob.Release();
-    return len_buffer;
+    return blob.GetBufferSize();
 }
 
 EXPORT size_t ConvertToDds(
-        byte* inBuff,
+        byte *inBuff,
         int inBuff_len,
-        Blob& blob,
+        DirectX::Blob& blob,
         DirectXTexSharp::ESaveFileTypes filetype,
         DXGI_FORMAT format,
         bool vflip,
@@ -1089,14 +1080,39 @@ EXPORT size_t ConvertToDds(
 {
     HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 
-    auto dblob = ConvertToDdsMemory(inBuff, inBuff_len, filetype, static_cast<__dxgiformat_h__::DXGI_FORMAT> (format), vflip, hflip);
+    blob = ConvertToDdsMemory(inBuff, inBuff_len, filetype, static_cast<__dxgiformat_h__::DXGI_FORMAT> (format), vflip, hflip);
 
-    auto len_buffer = dblob.GetBufferSize();
+    return blob.GetBufferSize();
+}
 
-    blob.m_buffer = new byte[len_buffer];
-    blob.m_size = len_buffer;
-    memcpy(blob.m_buffer, dblob.GetBufferPointer(), len_buffer);
+EXPORT HRESULT FreeBlob(DirectX::Blob &blob)
+{
+    blob.Release();
+    return S_OK;
+}
 
-    dblob.Release();
+EXPORT HRESULT Free(const byte *ptr)
+{
+    delete[] ptr;
+    return S_OK;
+}
+
+EXPORT size_t ConvertToDdsBuffer(
+        byte* inBuff,
+        int inBuff_len,
+        byte* outBuff,
+        DirectXTexSharp::ESaveFileTypes filetype,
+        DXGI_FORMAT format,
+        bool vflip,
+        bool hflip)
+{
+    HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+
+    auto blob = ConvertToDdsMemory(inBuff, inBuff_len, filetype, static_cast<__dxgiformat_h__::DXGI_FORMAT> (format), vflip, hflip);
+
+    auto len_buffer = blob.GetBufferSize();
+    memcpy(outBuff, blob.GetBufferPointer(), len_buffer);
+
+    blob.Release();
     return len_buffer;
 }

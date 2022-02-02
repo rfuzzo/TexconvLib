@@ -107,16 +107,10 @@ typedef unsigned int uint;
 #include "DirectXTexEnums.h"
 #include "../DirectXTex/DirectXTex/DirectXTex.h"
 
-struct Blob
-{
-    void*   m_buffer;
-    size_t  m_size;
-};
-
 EXPORT size_t ConvertFromDds(
         byte* bytePtr,
         int len,
-        Blob& blob,
+        DirectX::Blob& blob,
         DirectXTexSharp::ESaveFileTypes filetype,
         bool vflip,
         bool hflip);
@@ -124,7 +118,19 @@ EXPORT size_t ConvertFromDds(
 EXPORT size_t ConvertToDds(
         byte* inBuff,
         int inBuff_len,
-        Blob& blob,
+        DirectX::Blob& blob,
+        DirectXTexSharp::ESaveFileTypes filetype,
+        DXGI_FORMAT format,
+        bool vflip,
+        bool hflip);
+
+EXPORT HRESULT Free(const byte *ptr);
+EXPORT HRESULT FreeBlob(DirectX::Blob &blob);
+
+EXPORT size_t ConvertToDdsBuffer(
+        byte* inBuff,
+        int inBuff_len,
+        byte* outBuff,
         DirectXTexSharp::ESaveFileTypes filetype,
         DXGI_FORMAT format,
         bool vflip,

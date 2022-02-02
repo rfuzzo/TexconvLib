@@ -28,30 +28,40 @@ byte *load_file(const char *filename, int *size) {
 }
 
 int main() {
-    const char* curfile = R"(E:\GitHub\DirectXTexSharp\DirectXTexSharp\test.tga)";
+    const char* curfile = R"(E:\GitHub\TexconvLib\Source\test.tga)";
 
     int input_size;
     byte *input = load_file(curfile, &input_size);
 
-    Blob blob;
-    auto hr = ConvertToDds(input, input_size, blob,
+    DirectX::Blob blob;
+    auto len = ConvertToDds(input, input_size, blob,
                            DirectXTexSharp::ESaveFileTypes::TGA,DXGI_FORMAT_UNKNOWN,
                            false, false);
-    if (hr > 0)
-    {
-        return 1;
-    }
 
-    auto len = blob.m_size;
-    //auto buffer = blob.GetBufferPointer();
-    auto buffer =  static_cast<byte*>(blob.m_buffer);
+    auto buffer =  static_cast<byte*>(blob.GetBufferPointer());
 
-    const char *destfile = R"(E:\GitHub\DirectXTexSharp\DirectXTexSharp\test_out.dds)";
+//    auto blob = new Blob();
+//    auto hr = ConvertToDds(input, input_size, *blob,
+//                           DirectXTexSharp::ESaveFileTypes::TGA,DXGI_FORMAT_UNKNOWN,
+//                           false, false);
+//
+//    auto len = blob.m_size;
+
+    // allocation happens here
+//    auto inbuffer = new byte[1273148];
+//    auto len = ConvertToDdsBuffer(input, input_size, inbuffer,
+//                           DirectXTexSharp::ESaveFileTypes::TGA,DXGI_FORMAT_UNKNOWN,
+//                           false, false);
+//    auto buffer =  static_cast<byte*>(inbuffer);
+
+    const char *destfile = R"(E:\GitHub\TexconvLib\Source\test_out.dds)";
     FILE *f = fopen(destfile, "wb");
     if (!f) error("file open for write error", destfile);
     if (fwrite(buffer, 1, len, f) != len)
         error("file write error", destfile);
     fclose(f);
+
+    blob.Release();
 
     return 0;
 }
