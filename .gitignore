@@ -33,3 +33,4 @@ DirectXTexSharp/cmake-build-release/
 out/
 Source/cmake-build-debug/
 Source/cmake-build-release/
+.DS_Store
