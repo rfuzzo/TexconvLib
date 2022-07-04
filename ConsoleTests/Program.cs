@@ -5,7 +5,7 @@ using WolvenKit.Common.DDS;
 using static WolvenKit.Common.DDS.TexconvNative;
 
 Directory.CreateDirectory(Path.GetFullPath("texc"));
-
+Console.WriteLine(Path.GetFullPath("texc"));
 
 string testFile = Path.GetFullPath("Resources/q204_columbarium_1080p.tga");
 byte[] bytes = File.ReadAllBytes(testFile);
@@ -25,7 +25,7 @@ TexMetadata md = GetMetadataFromTGAFile(testFile);
 
 //}
 
-/*
+
 {
     using ScopedStopwatch ssw = new("DXGI_FORMAT_UNKNOWN");
     // convert to DDS
@@ -40,7 +40,6 @@ TexMetadata md = GetMetadataFromTGAFile(testFile);
     {
         File.Delete(outFile);
     }
-    Console.WriteLine(outFile);
     File.WriteAllBytes(outFile, buffer);
 }
 
@@ -56,7 +55,6 @@ TexMetadata md = GetMetadataFromTGAFile(testFile);
         {
             File.Delete(outFile);
         }
-        Console.WriteLine(outFile);
         File.WriteAllBytes(outFile, buffer);
     }
     finally
@@ -64,13 +62,13 @@ TexMetadata md = GetMetadataFromTGAFile(testFile);
         FreeBlob(blob);
     }
 }
-*/
+
 
 testFile = Path.GetFullPath("Resources/h0_001_wa_c__judy_d02.tga");
 bytes = File.ReadAllBytes(testFile);
 MemoryStream ms = new(bytes);
 
-/*
+
 {
     using ScopedStopwatch ssw = new("DXGI_FORMAT_BC1_UNORM");
     ms.Seek(0, SeekOrigin.Begin);
@@ -86,7 +84,7 @@ MemoryStream ms = new(bytes);
     string outFile3 = Path.GetFullPath(Path.Combine("texc", "q204_columbarium_1080p_bc3.dds"));
     File.WriteAllBytes(outFile3, r3);
 }
-*/
+
 
 {
     using ScopedStopwatch ssw = new("DXGI_FORMAT_BC7_UNORM");
