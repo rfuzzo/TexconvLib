@@ -5,6 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +13,7 @@
     <None Remove="lib\texconv.pdb" />
     <None Remove="Resources\q204_columbarium_1080p.dds" />
     <None Remove="Resources\q204_columbarium_1080p.tga" />
+    <None Remove="Resources\h0_001_wa_c__judy_d02.tga" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +29,9 @@
     <Content Include="Resources\q204_columbarium_1080p.tga">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+	<Content Include="Resources\h0_001_wa_c__judy_d02.tga">
+		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</Content>
   </ItemGroup>
 
 </Project>
