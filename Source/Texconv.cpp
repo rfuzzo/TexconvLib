@@ -11,9 +11,18 @@ using Microsoft::WRL::ComPtr;
 
 using namespace DirectXTexSharp;
 
+/*
+
+texconv.cpp
+DirectXTex latest: 6 June 2022
+commit: 679538ee83607fab6c40eb662470a468c55d114d
+https://github.com/microsoft/DirectXTex/compare/679538ee83607fab6c40eb662470a468c55d114d...main
+
+*/
+
 namespace
 {
-    inline static bool ispow2(size_t x)
+    constexpr static bool ispow2(size_t x)
     {
         return ((x != 0) && !(x & (x - 1)));
     }
@@ -24,7 +33,7 @@ namespace
 
         LPWSTR errorText = nullptr;
 
-        DWORD result = FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_ALLOCATE_BUFFER,
+        const DWORD result = FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_ALLOCATE_BUFFER,
             nullptr, static_cast<DWORD>(hr),
             MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPWSTR>(&errorText), 0, nullptr);
 
@@ -35,9 +44,8 @@ namespace
             swprintf_s(desc, L": %ls", errorText);
 
             size_t len = wcslen(desc);
-            if (len >= 2)
+            if (len >= 1)
             {
-                desc[len - 2] = 0;
                 desc[len - 1] = 0;
             }
 
@@ -48,42 +56,44 @@ namespace
         return desc;
     }
 
-    void GetWicPropsJpg(IPropertyBag2* props)
+    // texconv.cpp line 3647
+    void GetWicPropsJpg( IPropertyBag2* props )
     {
         bool wicLossless = true;
         float wicQuality = -1.f;
 
-        if (wicLossless || wicQuality >= 0.f)
+        if( wicLossless || wicQuality >= 0.f )
         {
             PROPBAG2 options = {};
             VARIANT varValues = {};
-            options.pstrName = const_cast<wchar_t*>(L"ImageQuality");
+            options.pstrName = const_cast< wchar_t* >( L"ImageQuality" );
             varValues.vt = VT_R4;
-            varValues.fltVal = (wicLossless) ? 1.f : wicQuality;
-            (void)props->Write(1, &options, &varValues);
+            varValues.fltVal = ( wicLossless ) ? 1.f : wicQuality;
+            std::ignore = props->Write( 1, &options, &varValues );
         }
     }
 
-    void GetWicPropsTiff(IPropertyBag2* props)
+    // texconv.cpp line 3660
+    void GetWicPropsTiff( IPropertyBag2* props )
     {
         bool wicLossless = true;
         float wicQuality = -1.f;
 
         PROPBAG2 options = {};
         VARIANT varValues = {};
-        if (wicLossless)
+        if( wicLossless )
         {
-            options.pstrName = const_cast<wchar_t*>(L"TiffCompressionMethod");
+            options.pstrName = const_cast< wchar_t* >( L"TiffCompressionMethod" );
             varValues.vt = VT_UI1;
             varValues.bVal = WICTiffCompressionNone;
         }
-        else if (wicQuality >= 0.f)
+        else if( wicQuality >= 0.f )
         {
-            options.pstrName = const_cast<wchar_t*>(L"CompressionQuality");
+            options.pstrName = const_cast< wchar_t* >( L"CompressionQuality" );
             varValues.vt = VT_R4;
             varValues.fltVal = wicQuality;
         }
-        (void)props->Write(1, &options, &varValues);
+        std::ignore = props->Write( 1, &options, &varValues );
     }
 
     _Success_( return )
@@ -1008,10 +1018,6 @@ DirectX::Blob ConvertToDdsMemory(
 }
 
 
-
-//HRESULT __cdecl SaveToTGAMemory(_In_ const Image & image,
-//	_In_ TGA_FLAGS flags,
-//	_Out_ Blob & blob, _In_opt_ const TexMetadata * metadata = nullptr) noexcept;
 int ConvertAndSaveDdsImage(
     byte* bytePtr,
     int len,
