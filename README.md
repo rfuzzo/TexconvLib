@@ -6,7 +6,7 @@ A c++ wrapper library around [DirectXTex and Texconv](https://github.com/microso
 1. Clone the repository into an empty folder
 
 ```cmd
-git clone https://github.com/dotnet/clangsharp
+git clone https://github.com/rfuzzo/TexconvLib.git
 ```
 
 2. Update the submodules
@@ -15,6 +15,10 @@ git submodule init --recursive
 ```
 
 3. Build the repository with cmake
+
+- `CMakeLists.txt` or `Source/CMakeLists.txt`
+
+- There is also a `TexconvLib.sln` for c# interop tests. 
 
 ## Currently implemented Texconv functions:
 - [ ] ConvertAndSaveDdsImage
